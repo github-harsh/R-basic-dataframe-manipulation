@@ -1,0 +1,204 @@
+---
+title: "MATH2349 Semester 2, 2019"
+author: "Harsh Girish Gaikwad S3735566"
+subtitle: Assignment 1
+output:
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+## Setup
+
+Install and load the necessary packages to reproduce the report here:
+```{r, echo = TRUE, warnings = FALSE}
+library(readr)
+library(knitr)
+```
+
+
+
+## Data Description
+
+The following data is of the Carbon Dioxide emissions in Metric tons per capita of 50 countries taken randomly. The data is from the year 1990 to 2000 with each year as an individual column displaying CO2 emissions for that particular country. The data has been modified so as to fit the requirements of this assignment. The following modifications have been made : 
+
+* The first 3 rows have been deleted as they contained information about the data.
+* The column Country.Code has been replaced by Country.Income as the dataset required to have an ordinal variable.
+
+**Source : **
+The source of the data is from World Bank Open Data which is a repository of comprehensive data about different countries across the globe.
+
+* https://data.worldbank.org/indicator/EN.ATM.CO2E.PC?end=2014&locations=US&start=1960&view=chart
+
+
+**Kindly note that the dataset has been reduced in size for the purpose of this assignment.**
+
+
+
+
+## Read/Import Data
+
+```{r}
+  dFrame <- read_csv("Data Preprocessing Assignments/CO2_Emissions_CSV.csv")
+  head(dFrame)
+```
+
+
+Explaination of steps : 
+
+* imported the readr package 
+* used the read_csv() method of readr to import the data
+* passed the path of the CSV file as the first argument to read_csv
+* used the data.frame() function to convert the "list" type object into a data frame
+
+
+## Inspect and Understand
+
+The str() function returns the total number of observations(rows) and variables(columns) of the dFrame.
+```{r}
+  str(dFrame)  
+```
+
+The class function returns the datatype
+```{r}
+  class(dFrame$`Country Name`)
+  class(dFrame$`Country Income`)
+  class(dFrame$`1990`)
+```
+
+
+To convert the Counrty Income variable into an ordered factor the factor() function has been applied to it
+```{r}
+
+  dFrame$`Country Income` <- factor(dFrame$`Country Income`,
+                                  levels = c("Low", "Medium", "High"),
+                                  ordered = TRUE)
+  class(dFrame$`Country Income`)
+```
+
+
+The levels() function checks the levels.
+```{r}
+  levels(dFrame$`Country Name`)
+  levels(dFrame$`Country Income`)
+```
+
+
+## Subsetting I
+
+The first 10 observations of the matrix are subsetted and put into "tenObs" variable
+```{r}
+  tenObs <- dFrame[1:10,]
+  tenObs
+```
+
+
+The ten observations are then converted into a matrix using the as.matrix method
+```{r}
+  dFrameMatrix <- as.matrix(tenObs)
+  dFrameMatrix
+```
+  
+
+The structure of the matrix is checked using the str() function  
+```{r}
+  str(dFrameMatrix)
+```
+
+Reason for getting the matrix as a character : 
+In R, if different data types are attempted to be combined then they are coerced into the most flexible type. Hence the above matrix got converted to "chr" as character is more  flexible than integer datatype.
+
+
+
+## Subsetting II
+
+The 1st and 13th column of the dataframe is extracted using the square brackets by passing a vector specifying the column numbers to be extracted.
+```{r}
+  firstLastVar <- dFrame[,c(1,13)]
+  firstLastVar
+```
+
+
+The data is saved using the save function which takes the first argument as the data and 2nd argument as the name which should be given to the file.
+```{r}
+  save(firstLastVar, file = "firstLastVar.RData")
+```
+
+
+
+## Create a new Data Frame
+
+The data frame contains 2 variables initially viz. 
+
+* speed - speed of the runner which is an integer variable
+
+* rank - rank of the runner which is an ordinal categorical variable
+```{r}
+  speed <- c(35, 40, 47, 39)
+  rank <- c("4th", "2nd", "1st", "3rd")
+  speed
+  rank
+```
+
+
+The data frame is created using data.frame() function and is assigned to an object
+```{r}
+  raceFrame <- data.frame(speed,rank)
+  raceFrame
+```
+
+
+The rank variable is assigned levels and is ordered accordingly
+```{r}
+  raceFrame$rank <- factor(raceFrame$rank,
+                           levels = c("1st", "2nd", "3rd", "4th"),
+                           ordered = TRUE)
+  raceFrame$rank
+```
+
+
+The column names can be changed using colnames() function  
+```{r}
+  colnames(raceFrame) <- c("Speed", "Rank")
+  raceFrame
+```
+ 
+ 
+Structure of the variables is shown using the str() function  
+```{r}
+str(raceFrame$Speed)
+str(raceFrame$Rank)
+```
+
+
+The levels() function is used to get the levels of the ordered factor variable rank
+```{r}
+  levels(raceFrame$Rank)
+```
+
+
+The numeric vector created in age which will contain the ages of participants
+```{r}
+  age <- c(22, 21, 19, 22)
+  age
+```
+
+
+The cbind() function is used to add age vector to the raceFrame data frame.    
+```{r}
+  raceFrame <- cbind(raceFrame, age)
+  raceFrame
+```
+
+
+The attributes are shown using the attributes() function and the structure and dimensions are shown using the str() function
+```{r}
+  attributes(raceFrame)
+  str(raceFrame)
+```
+
+
+The dim() function returns two integers. First is the number of rows and second is the number of columns in the matrix
+```{r}
+  dim(raceFrame)
+```
